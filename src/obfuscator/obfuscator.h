@@ -15,14 +15,15 @@ class Obfuscator {
     // Methode pour tester le chiffrement XOR
     std::string xorEncryptDecrypt(const std::string &input, char key);
 
+    // Restaure le fichier depuis la sauvegarde
+    // pulbic to restore main file after obfuscation (educational purpose)
+    bool restoreBackup();
+
    private:
     // Chemin du fichier source
     std::string sourceFilePath;
     // Sauvegarde le fichier original dans un sourceFilePath + ".bak"
     bool backupOriginal();
-
-    // Restaure le fichier depuis la sauvegarde
-    bool restoreBackup();
 
     // Lit le contenu du fichier source et le retourne sous forme de string
     bool readSource(std::string &content);
