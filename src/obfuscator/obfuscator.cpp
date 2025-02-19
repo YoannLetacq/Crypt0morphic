@@ -107,6 +107,16 @@ bool Obfuscator::writeObfuscatedFile(const std::vector<std::string> &blocks,
     }
 
     obfuscatedContent += "\n Block de fonctions obfusquees\n";
+
+    // cle de chiffrement XOR
+    char key = static_cast<char>(std::rand() % 256);
+
+    for (const auto &block : blocks) {
+        std::string obfuscatedBlock = xorEncryptDecrypt(block, key);
+        obfuscatedContent += "/* ENCRYPTED_BLOCK_START \n" + obfuscatedBlock +
+                             "ENCRYPTED_BLOCK_END */ \n";
+    }
+
     for (const auto &block : blocks) {
         obfuscatedContent += block;
     }
