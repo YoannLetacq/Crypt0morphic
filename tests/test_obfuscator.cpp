@@ -3,8 +3,18 @@
 #include <string>
 
 #include "../src/obfuscator/obfuscator.h"
-
 int main() {
+    // --- Partie 1 : Test de la fonction XOR ---
+    {
+        Obfuscator obf("dummy");  // Le nom de fichier n'est pas utilisé ici.
+        std::string original = "Test XOR encryption";
+        char key = 'K';
+        std::string encrypted = obf.xorEncryptDecrypt(original, key);
+        std::string decrypted = obf.xorEncryptDecrypt(encrypted, key);
+        assert(decrypted == original);
+    }
+
+    // --- Partie 2 : Test de l'obfuscation avec chiffrement ---
     // Créez un fichier de test temporaire avec du contenu marqué
     std::string testFile = "test_source.cpp";
     std::ofstream out(testFile);
@@ -20,20 +30,19 @@ int main() {
     // Instancier l'obfuscateur sur le fichier de test
     Obfuscator obf(testFile);
 
-    // Tester la sauvegarde
+    // Appliquer l'obfuscation
     assert(obf.obfuscate() == true);
 
-    // Vérifier que le fichier obfusqué contient bien les blocs réordonnés à la
-    // fin
+    // Vérifier que le fichier obfusqué contient bien le marqueur des blocs
+    // encryptés
     std::ifstream in(testFile);
     std::string content((std::istreambuf_iterator<char>(in)),
                         std::istreambuf_iterator<char>());
     in.close();
 
-    // Vérifier que les marqueurs sont toujours présents dans le contenu
-    // (les blocs ont été extraits et réinsérés)
-    assert(content.find("BEGIN_FUNCTION") != std::string::npos);
-    assert(content.find("END_FUNCTION") != std::string::npos);
+    // Vérification de la présence du marqueur
+    assert(content.find("ENCRYPTED_BLOCK_START") != std::string::npos);
+    assert(content.find("ENCRYPTED_BLOCK_END") != std::string::npos);
 
     // Nettoyer le fichier de test et la sauvegarde
     std::remove(testFile.c_str());
